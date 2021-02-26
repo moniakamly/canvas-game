@@ -5,6 +5,8 @@ const c = canvas.getContext('2d');
 canvas.width = innerWidth; 
 canvas.height = innerHeight; 
 
+const scoreEl = document.querySelector('#scoreEl'); 
+
 class Player {
     constructor(x, y, radius, color) {
         this.x = x; 
@@ -130,6 +132,7 @@ function spawnEnemies() {
 }
 
 let animationId; 
+let score = 0; 
 function animate() {
     animationId = requestAnimationFrame(animate);
     c.fillStyle = 'rgba(0,0,0,0.1)';
@@ -173,11 +176,15 @@ function animate() {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y); 
             // When the projectile touch enemy
             if (dist - enemy.radius - projectile.radius < 1) {
+                
                 // Create explosion of particles
                 for (let i = 0; i < enemy.radius * 2; i++) {
                     particles.push(new Particle(projectile.x, projectile.y, Math.random() * 2, enemy.color, {x: (Math.random() - 0.5) * Math.random() * 5, y:(Math.random() - 0.5) * Math.random() * 5}))
                 }
                 if (enemy.radius - 10 > 5) {
+                    // increase the score 
+                    score += 100; 
+                    scoreEl.innerHTML = score; 
                     // GSAP is a JavaScript library for building high-performance animations
                     gsap.to(enemy, {
                         radius: enemy.radius - 10
@@ -187,6 +194,9 @@ function animate() {
                     }, 0); 
 
                 } else {
+                    // remove from scene altogether
+                    score += 250; 
+                    scoreEl.innerHTML = score; 
                     // setTimeout is to remove the flash effect whenever we hit an enemy 
                     setTimeout(() => {
                         enemies.splice(enemyIndex, 1);
