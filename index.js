@@ -131,13 +131,24 @@ function animate() {
         // Destroy enemy whenever we hit it 
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y); 
-            // When the enemy and the projectile touch 
+            // When the projectile touch enemy
             if (dist - enemy.radius - projectile.radius < 1) {
-                // setTimeout is to remove the flash effect whenever we hit an enemy 
-                setTimeout(() => {
-                    enemies.splice(enemyIndex, 1);
-                    projectiles.splice(projectileIndex, 1);
-                }, 0); 
+                if (enemy.radius - 10 > 5) {
+                    // GSAP is a JavaScript library for building high-performance animations
+                    gsap.to(enemy, {
+                        radius: enemy.radius - 10
+                    })
+                    setTimeout(() => {
+                        projectiles.splice(projectileIndex, 1);
+                    }, 0); 
+
+                } else {
+                    // setTimeout is to remove the flash effect whenever we hit an enemy 
+                    setTimeout(() => {
+                        enemies.splice(enemyIndex, 1);
+                        projectiles.splice(projectileIndex, 1);
+                    }, 0); 
+                }
             }
         });
     });
