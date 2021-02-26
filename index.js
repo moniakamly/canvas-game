@@ -101,12 +101,25 @@ function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height); 
     player.draw(); 
-    projectiles.forEach(projectile => {
+
+    projectiles.forEach((projectile) => {
         projectile.update();  
     }); 
 
-    enemies.forEach(enemy => {
+    enemies.forEach((enemy, enemyIndex) => {
         enemy.update();
+
+        projectiles.forEach((projectile, projectileIndex) => {
+            const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y); 
+            // When the enemy and the projectile touch 
+            if (dist - enemy.radius - projectile.radius < 1) {
+                // setTimeout is to remove the flash effect whenever we hit an enemy 
+                setTimeout(() => {
+                    enemies.splice(enemyIndex, 1);
+                    projectiles.splice(projectileIndex, 1);
+                }, 0); 
+            }
+        });
     });
 }
 
